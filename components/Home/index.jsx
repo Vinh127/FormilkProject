@@ -1,51 +1,16 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Formik, Field, Form, useFormik } from "formik";
-import { Button } from "antd";
+import { Button, Card, Space } from "antd";
 
 import styles from "./Home.module.scss";
+import Item from "./Item/index";
 
 function HomePage({ formValue }) {
-  const formik = useFormik({
-    initialValues: {
-      userName: "",
-      userEmail: "",
-      userPassword: "",
-      userPhoneNumber: "",
-    },
-
-    onSubmit: (values) => {
-      console.log("values: ", values);
-      const result = axios({
-        method: "POST",
-        url: "http://localhost:3001/form",
-        data: {
-          userName: values.userName,
-          userEmail: values.userEmail,
-          userPassword: values.userPassword,
-          userPhoneNumber: values.userPhoneNumber,
-        },
-      });
-      console.log("result: ", result);
-    },
-  });
-
-  function handleEdit(id) {
-    const newFormValue = formValue;
-    
-  }
+  const [isChange, setIsChange] = useState(false);
 
   function handleDelete(id) {
-    const newFormValue = formValue;
-
-    console.log("id in Delete: ",id);
-
-    const formValueIndex = newFormValue.findIndex((item) => {
-      return item.id === id;
-    });
-
-    newFormValue.splice(formValueIndex, 1);
-    
+    setIsChange(!isChange);
     const result = axios({
       method: "DELETE",
       url: `http://localhost:3001/form/${id}`,
@@ -55,25 +20,13 @@ function HomePage({ formValue }) {
   function renderFormValue() {
     return formValue.map((formValueItem, formValueIndex) => {
       return (
-        <div className={styles.form__right_list_item}>
-          <div className={styles.form__right_list_item_top}>
-            <Button onClick={() => handleEdit(formValueItem.id)}>Edit</Button>
-            <Button danger onClick={() => handleDelete(formValueItem.id)}>
-              Delete
-            </Button>
-          </div>
-          <div className={styles.form__right_list_item_under}>
-            <div className={styles.form__right_list_item_under_value}>
-              {formValueItem?.userName}
-            </div>
-            <div className={styles.form__right_list_item_under_value}>
-              {formValueItem?.userEmail}
-            </div>
-            <div className={styles.form__right_list_item_under_value}>
-              {formValueItem?.userPhoneNumber}
-            </div>
-          </div>
-        </div>
+        <Item
+          key={formValueIndex}
+          formValueItem={formValueItem}
+          formValueId={formValueItem.id}
+          handleDelete={handleDelete}
+          setIsChange={setIsChange}
+        />
       );
     });
   }
@@ -82,12 +35,25 @@ function HomePage({ formValue }) {
     <div className={styles.form}>
       <div className={styles.form__left}>
         <Formik
-          onSubmit={formik.handleSubmit}
           initialValues={{
             userName: "",
             userEmail: "",
             userPassword: "",
             userPhoneNumber: "",
+          }}
+          onSubmit={async (values) => {
+            console.log("values: ", values);
+            const result = axios({
+              method: "POST",
+              url: "http://localhost:3001/form",
+              data: {
+                userName: values.userName,
+                userEmail: values.userEmail,
+                userPassword: values.userPassword,
+                userPhoneNumber: values.userPhoneNumber,
+              },
+            });
+            setIsChange(true);
           }}
         >
           <Form className={styles.form__left_background}>
@@ -97,33 +63,25 @@ function HomePage({ formValue }) {
               <Field
                 id="userName"
                 name="userName"
-                placeholder="Fill your username"
-                onChange={formik.handleChange}
-                value={formik.values.userName}
+                placeholder="Fill your name"
               />
             </div>
 
             <div className={styles.form__left_background_content}>
-              <label htmlFor="userPhoneNumber">User Phone Number</label>
+              <label htmlFor="userPhoneNumber">Phone Number</label>
               <Field
                 id="userPhoneNumber"
                 name="userPhoneNumber"
                 placeholder="Fill your phonenumber"
-                type="number"
-                onChange={formik.handleChange}
-                value={formik.values.userPhoneNumber}
               />
             </div>
 
             <div className={styles.form__left_background_content}>
-              <label htmlFor="userEmail">Email</label>
+              <label htmlFor="userEmail">User Email</label>
               <Field
                 id="userEmail"
                 name="userEmail"
                 placeholder="Fill your email"
-                type="email"
-                onChange={formik.handleChange}
-                value={formik.values.userEmail}
               />
             </div>
 
@@ -132,10 +90,8 @@ function HomePage({ formValue }) {
               <Field
                 id="userPassword"
                 name="userPassword"
-                placeholder="Fill your password"
                 type="password"
-                onChange={formik.handleChange}
-                value={formik.values.userPassword}
+                placeholder="Fill your password"
               />
             </div>
             <button type="submit">Submit</button>
