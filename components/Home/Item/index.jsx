@@ -7,7 +7,7 @@ import * as Yup from "yup";
 import styles from "./Item.module.scss";
 import axios from "axios";
 function Item(props) {
-  const { formValueItem, formValueId, handleDelete, setIsChange } = props;
+  const { formValueItem, formValueId, handleDelete } = props;
   const [isShowEdit, setIsShowEdit] = useState(false);
 
   //  Regex Phone Number
@@ -46,6 +46,42 @@ function Item(props) {
     );
   }
 
+  // const onSubmit = (values, { resetForm }) => {
+  //   const id = parseInt(formValueId);
+  //   const result = axios({
+  //     method: "PATCH",
+  //     url: `http://localhost:3001/form/${id}`,
+  //     data: {
+  //       userName: values.userName,
+  //       userPhoneNumber: values.userPhoneNumber,
+  //       userEmail: values.userEmail,
+  //       userPassword: values.userPassword,
+  //     },
+  //   });
+  //   resetForm({ values: "" });
+  //   setIsChange(true);
+  //   setIsShowEdit(false);
+  // };
+
+  // function onSubmit() {
+  //   (values, { resetForm }) => {
+  //     const id = parseInt(formValueId);
+  //     const result = axios({
+  //       method: "PATCH",
+  //       url: `http://localhost:3001/form/${id}`,
+  //       data: {
+  //         userName: values.userName,
+  //         userPhoneNumber: values.userPhoneNumber,
+  //         userEmail: values.userEmail,
+  //         userPassword: values.userPassword,
+  //       },
+  //     });
+  //     resetForm({ values: "" });
+  //     setIsChange(true);
+  //     setIsShowEdit(false);
+  //   };
+  // }
+
   return (
     <Card size="small" style={{ marginBottom: "16px" }}>
       <div className={styles.item}>
@@ -68,7 +104,7 @@ function Item(props) {
               <Popconfirm
                 title={`Are you sure to delete ${formValueItem?.userName}?`}
                 onConfirm={() => {
-                  handleDelete(formValueItem.id), setIsChange(true);
+                  handleDelete(formValueItem.id);
                 }}
                 okText="Yes"
                 cancelText="No"
@@ -85,14 +121,13 @@ function Item(props) {
       {isShowEdit ? (
         <Formik
           initialValues={{
-            userName: formValueItem?.userName,
+            userName: formValueItem?.userName || "",
             userEmail: formValueItem?.userEmail,
             userPassword: formValueItem?.userPassword,
             userPhoneNumber: formValueItem?.userPhoneNumber,
           }}
           validationSchema={formValidation}
-          onSubmit={(values) => {
-            console.log("values: ", values);
+          onSubmit={(values, { resetForm }) => {
             const id = parseInt(formValueId);
             const result = axios({
               method: "PATCH",
@@ -104,6 +139,7 @@ function Item(props) {
                 userPassword: values.userPassword,
               },
             });
+            resetForm({ values: "" });
             setIsChange(true);
             setIsShowEdit(false);
           }}
@@ -125,7 +161,7 @@ function Item(props) {
               ) : null}
 
               <label htmlFor="userEmail">User Email</label>
-              <Field id="userEmail" name="userEmail"  />
+              <Field id="userEmail" name="userEmail" />
               {errors.userEmail && touched.userEmail ? (
                 <div className={styles.form__item_error}>
                   {errors.userEmail}

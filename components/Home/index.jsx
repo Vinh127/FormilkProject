@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Formik, Field, Form, useFormik, ErrorMessage } from "formik";
-import { Button, Card, Space } from "antd";
+import { Button, notification, Space } from "antd";
 import * as Yup from "yup";
 
 import styles from "./Home.module.scss";
 import Item from "./Item/index";
 
-function HomePage({ formValue }) {
+function HomePage({ formValue, setData }) {
   const [isChange, setIsChange] = useState(false);
 
   //  Regex Phone Number
-  const phoneRegExp =  /((09|03|07|08|05)+([0-9]{8})\b)/g;
+  const phoneRegExp = /((09|03|07|08|05)+([0-9]{8})\b)/g;
 
   const formValidation = Yup.object().shape({
     userName: Yup.string()
@@ -20,7 +20,7 @@ function HomePage({ formValue }) {
       .required("User Name is Required"),
 
     userPhoneNumber: Yup.string()
-      .matches(phoneRegExp,"Phone number is not valid")
+      .matches(phoneRegExp, "Phone number is not valid")
       .required("Phone number is required"),
 
     userEmail: Yup.string()
@@ -33,12 +33,36 @@ function HomePage({ formValue }) {
       .required("User Name is Required"),
   });
 
-  function handleDelete(id) {
-    const result = axios({
-      method: "DELETE",
-      url: `http://localhost:3001/form/${id}`,
+  function openNotificationError(type) {
+    notification[type]({
+      message: "Thất Bại",
+      description: "Thao tác thực hiện thất bại",
     });
-    setIsChange(!isChange);
+  }
+
+  async function handleDelete(id) {
+    try {
+      // const newFormValue = formValue;
+      // const formValueIndex = newFormValue.findIndex((item) => {
+      //   return item.id === id;
+      // });
+      // newFormValue.splice(formValueIndex, 1);
+      // const result = await axios({
+      //   method: "PATCH",
+      //   url: `http://localhost:3001/form/${id}`,
+      //   data: {
+      //     newFormValue: newFormValue,
+      //   },
+      // });
+      // setData([...newFormValue]);
+      // let newData = newFormValue.filter((v) => v.id === id);
+      const result = await axios({
+        method: "DELETE",
+        url: `http://localhost:3001/form/${id}`,
+      });
+    } catch (e) {
+      openNotificationError("error");
+    }
   }
 
   function renderFormValue() {
@@ -49,7 +73,6 @@ function HomePage({ formValue }) {
           formValueItem={formValueItem}
           formValueId={formValueItem.id}
           handleDelete={handleDelete}
-          setIsChange={setIsChange}
         />
       );
     });
@@ -67,7 +90,7 @@ function HomePage({ formValue }) {
               userPhoneNumber: "",
             }}
             validationSchema={formValidation}
-            onSubmit={async (values) => {
+            onSubmit={(values, { resetForm }) => {
               const result = axios({
                 method: "POST",
                 url: "http://localhost:3001/form",
@@ -78,6 +101,7 @@ function HomePage({ formValue }) {
                   userPhoneNumber: values.userPhoneNumber,
                 },
               });
+              resetForm({ values: "" });
               setIsChange(true);
             }}
           >
@@ -88,8 +112,11 @@ function HomePage({ formValue }) {
                   <Field name="userName" placeholder="Fill your name" />
                   {errors.userName && touched.userName ? (
                     <div className={styles.item__error}>{errors.userName}</div>
-                  ) : null}
-                  {/* <ErrorMessage name="userName" /> */}
+                  ) : // <ErrorMessage
+                  //   className={styles.item__error}
+                  //   name="userName"
+                  // />
+                  null}
                 </div>
 
                 <div className={styles.form__left_background_content}>
@@ -103,8 +130,11 @@ function HomePage({ formValue }) {
                     <div className={styles.item__error}>
                       {errors.userPhoneNumber}
                     </div>
-                  ) : null}
-                  {/* <ErrorMessage name="userPhoneNumber" /> */}
+                  ) : // <ErrorMessage
+                  //   className={styles.item__error}
+                  //   name="userPhoneNumber"
+                  // />
+                  null}
                 </div>
 
                 <div className={styles.form__left_background_content}>
@@ -118,8 +148,11 @@ function HomePage({ formValue }) {
 
                   {errors.userEmail && touched.userEmail ? (
                     <div className={styles.item__error}>{errors.userEmail}</div>
-                  ) : null}
-                  {/* <ErrorMessage name="userEmail" /> */}
+                  ) : // <ErrorMessage
+                  //   className={styles.item__error}
+                  //   name="userEmail"
+                  // />
+                  null}
                 </div>
 
                 <div className={styles.form__left_background_content}>
@@ -134,9 +167,11 @@ function HomePage({ formValue }) {
                     <div className={styles.item__error}>
                       {errors.userPassword}
                     </div>
-                  ) : null}
-
-                  {/* <ErrorMessage name="userPassword" /> */}
+                  ) : // <ErrorMessage
+                  //   className={styles.item__error}
+                  //   name="userPassword"
+                  // />
+                  null}
                 </div>
 
                 <button type="submit">Submit</button>

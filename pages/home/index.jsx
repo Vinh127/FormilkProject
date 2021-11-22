@@ -5,7 +5,8 @@ import axios from "axios";
 import HomePage from "../../components/Home";
 
 function HomeIndex({ formValue }) {
-  return <HomePage formValue={formValue} />;
+  const [data, setData] = useState(formValue);
+  return <HomePage formValue={data} setData={setData} />;
 }
 
 export const getStaticProps = async () => {
