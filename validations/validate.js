@@ -1,18 +1,29 @@
 import * as Yup from "yup";
 
-const createFormValidate = Yup.object().shape({
-    userName: Yup.string()
+
+//  Regex Phone Number
+const phoneRegExp = /((09|03|07|08|05)+([0-9]{8})\b)/g;
+
+
+const formValidation = Yup.object().shape({
+  userName: Yup.string()
     .min(5, "Too Short!")
     .max(30, "Too Long!")
-    .required("The Field is Required"),
+    .required("User Name is Required"),
+
+  userPhoneNumber: Yup.string()
+    .matches(phoneRegExp, "Phone number is not valid")
+    .required("Phone number is required"),
 
   userEmail: Yup.string()
-    .email("Invalid Email")
-    .required("The Field is RequiredF"),
+    .email("Invalid email format")
+    .required("User Email is Required"),
 
-  userPassword: Yup.string().required("The Field is Required"),
+  userPassword: Yup.string()
+    .min(8, "Password is too short")
+    .max(12, "Password is too long")
+    .required("User Name is Required"),
+});
 
-  userPhoneNumber: Yup.number().required("The field is Required"),
-})
 
-export default createFormValidate;
+export default formValidation;
