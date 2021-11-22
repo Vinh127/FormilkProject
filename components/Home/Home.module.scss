@@ -1,13 +1,21 @@
 .form {
   position: relative;
   max-width: 1200px;
-  margin: 0px auto;
   display: flex;
+  margin: 0px auto;
   justify-content: center;
-  align-items: center;
   height: 100vh;
 
+  &__content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+
   &__left {
+    margin: 0px 20px;
+    min-height: 543px;
     min-width: 50%;
 
     &_background {
@@ -28,7 +36,6 @@
           color: rgb(17, 17, 17);
           font-weight: 500;
           font-size: 16px;
-          
         }
         input {
           display: flex;
@@ -73,13 +80,13 @@
       }
     }
   }
-  
+
   &__right {
     min-width: 50%;
+    min-height: 447px;
 
     &_list {
       display: flex;
-      align-items: center;
       justify-content: center;
       flex-direction: column;
 
@@ -88,44 +95,44 @@
         justify-content: center;
         align-items: center;
         flex-direction: column;
-        margin:15px 0px;
+        margin: 15px 0px;
         border: 1px solid #e7e7e7;
         min-width: 400px;
 
-        &_top{
-            position: relative;
-            display: flex;
-            justify-content: flex-end;
-            padding: 10px;
+        &_top {
+          position: relative;
+          display: flex;
+          justify-content: flex-end;
+          padding: 10px;
+          width: 100%;
+
+          &::after {
+            position: absolute;
+            content: "";
+            right: 0px;
+            bottom: 0px;
+            display: block;
+            margin: 0px auto;
             width: 100%;
+            height: 1px;
+            background-color: #e7e7e7;
+          }
 
-            &::after {
-                position: absolute;
-                content: '';
-                right: 0px;
-                bottom: 0px;
-                display: block;
-                margin: 0px auto;
-                width: 100%;
-                height: 1px;
-                background-color: #e7e7e7;
-            }
-
-            button {
-                margin:0px 6px;
-                min-width: 70px;
-            }
+          button {
+            margin: 0px 6px;
+            min-width: 70px;
+          }
         }
 
-        &_under{
-            min-height: 70px;
+        &_under {
+          min-height: 70px;
         }
       }
     }
   }
 }
 
-.item__error { 
+.item__error {
   color: red;
   font-weight: 550;
   font-size: 16px;

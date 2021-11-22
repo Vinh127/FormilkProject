@@ -10,13 +10,18 @@ import Item from "./Item/index";
 function HomePage({ formValue }) {
   const [isChange, setIsChange] = useState(false);
 
+  //  Regex Phone Number
+  const phoneRegExp =  /((09|03|07|08|05)+([0-9]{8})\b)/g;
+
   const formValidation = Yup.object().shape({
     userName: Yup.string()
       .min(5, "Too Short!")
       .max(30, "Too Long!")
       .required("User Name is Required"),
 
-    userPhoneNumber: Yup.number("Invalid Number").required("Phone number is required"),
+    userPhoneNumber: Yup.string()
+      .matches(phoneRegExp,"Phone number is not valid")
+      .required("Phone number is required"),
 
     userEmail: Yup.string()
       .email("Invalid email format")
@@ -52,84 +57,98 @@ function HomePage({ formValue }) {
 
   return (
     <div className={styles.form}>
-      <div className={styles.form__left}>
-        <Formik
-          initialValues={{
-            userName: "",
-            userEmail: "",
-            userPassword: "",
-            userPhoneNumber: "",
-          }}
-          validationSchema={formValidation}
-          onSubmit={async (values) => {
-            const result = axios({
-              method: "POST",
-              url: "http://localhost:3001/form",
-              data: {
-                userName: values.userName,
-                userEmail: values.userEmail,
-                userPassword: values.userPassword,
-                userPhoneNumber: values.userPhoneNumber,
-              },
-            });
-            setIsChange(true);
-          }}
-        >
-          {({ errors, touched }) => (
-            <Form>
-              <div className={styles.form__left_background_content}>
-                <label htmlFor="userName">User Name</label>
-                <Field name="userName"  placeholder="Fill your name"/>
-                {errors.userName && touched.userName ? <div className={styles.item__error}>{errors.userName}</div> : null}
-                {/* <ErrorMessage name="userName" /> */}
-              </div>
+      <div className={styles.form__content}>
+        <div className={styles.form__left}>
+          <Formik
+            initialValues={{
+              userName: "",
+              userEmail: "",
+              userPassword: "",
+              userPhoneNumber: "",
+            }}
+            validationSchema={formValidation}
+            onSubmit={async (values) => {
+              const result = axios({
+                method: "POST",
+                url: "http://localhost:3001/form",
+                data: {
+                  userName: values.userName,
+                  userEmail: values.userEmail,
+                  userPassword: values.userPassword,
+                  userPhoneNumber: values.userPhoneNumber,
+                },
+              });
+              setIsChange(true);
+            }}
+          >
+            {({ errors, touched }) => (
+              <Form>
+                <div className={styles.form__left_background_content}>
+                  <label htmlFor="userName">User Name</label>
+                  <Field name="userName" placeholder="Fill your name" />
+                  {errors.userName && touched.userName ? (
+                    <div className={styles.item__error}>{errors.userName}</div>
+                  ) : null}
+                  {/* <ErrorMessage name="userName" /> */}
+                </div>
 
-              <div className={styles.form__left_background_content}>
-                <label htmlFor="userPhoneNumber">Phone Number</label>
-                <Field name="userPhoneNumber" type="text" placeholder="Fill your phone number"/>
-                {errors.userPhoneNumber && touched.userPhoneNumber ? <div className={styles.item__error}>{errors.userPhoneNumber}</div> : null}
-                {/* <ErrorMessage name="userPhoneNumber" /> */}
-              </div>
+                <div className={styles.form__left_background_content}>
+                  <label htmlFor="userPhoneNumber">Phone Number</label>
+                  <Field
+                    name="userPhoneNumber"
+                    type="text"
+                    placeholder="Fill your phone number"
+                  />
+                  {errors.userPhoneNumber && touched.userPhoneNumber ? (
+                    <div className={styles.item__error}>
+                      {errors.userPhoneNumber}
+                    </div>
+                  ) : null}
+                  {/* <ErrorMessage name="userPhoneNumber" /> */}
+                </div>
 
-              <div className={styles.form__left_background_content}>
-                <label htmlFor="userEmail">User Email</label>
-                <Field
-                  id="userEmail"
-                  name="userEmail"
-                  type="email"
-                  placeholder="Fill your email"
-                />
+                <div className={styles.form__left_background_content}>
+                  <label htmlFor="userEmail">User Email</label>
+                  <Field
+                    id="userEmail"
+                    name="userEmail"
+                    type="email"
+                    placeholder="Fill your email"
+                  />
 
-                {errors.userEmail && touched.userEmail ? (
-                  <div className={styles.item__error}>{errors.userEmail}</div>
-                ) : null}
-                {/* <ErrorMessage name="userEmail" /> */}
-              </div>
+                  {errors.userEmail && touched.userEmail ? (
+                    <div className={styles.item__error}>{errors.userEmail}</div>
+                  ) : null}
+                  {/* <ErrorMessage name="userEmail" /> */}
+                </div>
 
-              <div className={styles.form__left_background_content}>
-                <label htmlFor="userPassword">Password</label>
-                <Field
-                  id="userPassword"
-                  name="userPassword"
-                  type="password"
-                  placeholder="Fill your password"
-                />
-                {errors.userPassword && touched.userPassword ? (
-                  <div className={styles.item__error}>{errors.userPassword}</div>
-                ) : null}
+                <div className={styles.form__left_background_content}>
+                  <label htmlFor="userPassword">Password</label>
+                  <Field
+                    id="userPassword"
+                    name="userPassword"
+                    type="password"
+                    placeholder="Fill your password"
+                  />
+                  {errors.userPassword && touched.userPassword ? (
+                    <div className={styles.item__error}>
+                      {errors.userPassword}
+                    </div>
+                  ) : null}
 
-                {/* <ErrorMessage name="userPassword" /> */}
-              </div>
+                  {/* <ErrorMessage name="userPassword" /> */}
+                </div>
 
-              <button type="submit">Submit</button>
-            </Form>
-          )}
-        </Formik>
-      </div>
+                <button type="submit">Submit</button>
+              </Form>
+            )}
+          </Formik>
+        </div>
 
-      <div className={styles.form__right}>
-        <div className={styles.form_right_list}></div>
-        {renderFormValue()}
+        <div className={styles.form__right}>
+          <div className={styles.form_right_list}></div>
+          {renderFormValue()}
+        </div>
       </div>
     </div>
   );

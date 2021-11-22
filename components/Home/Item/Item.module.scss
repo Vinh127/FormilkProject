@@ -22,7 +22,7 @@
     margin: 10px 0px;
     padding: 7px 20px;
     border: 1px solid rgb(114, 46, 209);
-    height: 48px;
+    height: 30px;
     width: 100%;
     background-color: white;
     color: rgb(17, 17, 17);
@@ -55,5 +55,11 @@
       color: rgb(114, 46, 209);
       animation: all ease-in-out 600ms;
     }
+  }
+
+  &_error {
+    color: red;
+    font-weight: 550;
+    font-size: 14px;
   }
 }
