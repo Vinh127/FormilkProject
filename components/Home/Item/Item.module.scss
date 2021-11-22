@@ -1,5 +1,59 @@
-.item { 
+.item {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.form__item {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+
+  label {
+    min-width: 148px;
+    color: rgb(17, 17, 17);
+    font-weight: 500;
+    font-size: 16px;
+  }
+
+  input {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
+    margin: 10px 0px;
+    padding: 7px 20px;
+    border: 1px solid rgb(114, 46, 209);
+    height: 48px;
+    width: 100%;
+    background-color: white;
+    color: rgb(17, 17, 17);
+    outline: none;
+    font-size: 17px;
+    width: 100%;
+  }
+
+  button {
+    display: flex;
+    justify-content: center;
     align-items: center;
+    margin: 22px 0px;
+    height: 55px;
+    border-radius: 10px;
+    width: 100%;
+    background-color: rgb(114, 46, 209);
+    color: white;
+    font-weight: 550;
+    outline: none;
+    border: 1px solid rgb(114, 46, 209);
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    box-shadow: 3px 6px 10px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    animation: all ease-in-out 600ms;
+
+    &:hover {
+      background-color: white;
+      color: rgb(114, 46, 209);
+      animation: all ease-in-out 600ms;
+    }
+  }
 }

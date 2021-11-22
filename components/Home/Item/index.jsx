@@ -66,7 +66,7 @@ function Item(props) {
             userPassword: formValueItem?.userPassword,
             userPhoneNumber: formValueItem?.userPhoneNumber,
           }}
-          onSubmit={async (values) => {
+          onSubmit={(values) => {
             console.log("values: ", values);
             const id = parseInt(formValueId);
             const result = axios({
@@ -80,9 +80,10 @@ function Item(props) {
               },
             });
             setIsChange(true);
+            setIsShowEdit(false);
           }}
         >
-          <Form>
+          <Form className={styles.form__item}>
             <label htmlFor="userName">User Name</label>
             <Field id="userName" name="userName" placeholder="" />
 
@@ -95,12 +96,7 @@ function Item(props) {
             <label htmlFor="userPassword">Password</label>
             <Field id="userPassword" name="userPassword" type="password" />
 
-            <button
-              type="submit"
-              onClick={() => setIsShowEdit(false)}
-            >
-              Confirm
-            </button>
+            <button type="submit">Confirm</button>
           </Form>
         </Formik>
       ) : (
