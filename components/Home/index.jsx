@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Formik, Field, Form, useFormik, ErrorMessage } from "formik";
 import { Button, notification, Space } from "antd";
-import formValidation from '../../validations/validate';
+import formValidation from "../../validations/validate";
 
 import * as Yup from "yup";
 
@@ -10,8 +10,8 @@ import styles from "./Home.module.scss";
 import Item from "./Item/index";
 
 function HomePage({ formValue, setData }) {
-  const [isChange, setIsChange] = useState(false);
-
+  const [isChange, setIsChange] = useState({});
+  console.log("isChange: ", isChange);
 
   function openNotificationError(type) {
     notification[type]({
@@ -36,6 +36,7 @@ function HomePage({ formValue, setData }) {
       // });
       // setData([...newFormValue]);
       // let newData = newFormValue.filter((v) => v.id === id);
+
       const result = await axios({
         method: "DELETE",
         url: `http://localhost:3001/form/${id}`,
@@ -58,6 +59,25 @@ function HomePage({ formValue, setData }) {
     });
   }
 
+  async function onSubmit(values, { resetForm }) {
+    console.log("values: ", values);
+    const result = await axios({
+      method: "POST",
+      url: "http://localhost:3001/form",
+      data: {
+        userName: values.userName,
+        userEmail: values.userEmail,
+        userPassword: values.userPassword,
+        userPhoneNumber: values.userPhoneNumber,
+      },
+    });
+
+    resetForm({ values: "" });
+
+    // await setIsChange({...values});
+  }
+
+
   return (
     <div className={styles.form}>
       <div className={styles.form__content}>
@@ -70,20 +90,7 @@ function HomePage({ formValue, setData }) {
               userPhoneNumber: "",
             }}
             validationSchema={formValidation}
-            onSubmit={(values, { resetForm }) => {
-              const result = axios({
-                method: "POST",
-                url: "http://localhost:3001/form",
-                data: {
-                  userName: values.userName,
-                  userEmail: values.userEmail,
-                  userPassword: values.userPassword,
-                  userPhoneNumber: values.userPhoneNumber,
-                },
-              });
-              resetForm({ values: "" });
-              setIsChange(true);
-            }}
+            onSubmit={onSubmit}
           >
             {({ errors, touched }) => (
               <Form>
